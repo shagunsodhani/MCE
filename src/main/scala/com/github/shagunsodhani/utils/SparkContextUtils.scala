@@ -3,11 +3,15 @@ package main.scala.com.github.shagunsodhani.utils
 import java.net.InetAddress
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
+import com.typesafe.config.ConfigFactory
 
 object SparkContextUtils {
-  private val appName = "MCE"
 
-  private val master = "local[1]"
+  val config = ConfigFactory.load();
+  
+  private val appName = config.getString("spark.appname")
+
+  private val master = config.getString("spark.master")
 
   private val driver = InetAddress.getLocalHost().getHostAddress();
 
