@@ -1,0 +1,4 @@
+spark {
+	appname = "MCE"
+	master = "local[2]"
+}
