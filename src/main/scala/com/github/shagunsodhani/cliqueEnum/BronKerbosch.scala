@@ -18,12 +18,16 @@ class BronKerbosch[VD: ClassTag, ED: ClassTag](sc: SparkContext,
 
   private val graph: Graph[VD, ED] = inputGraph;
 
+  private val neighbourVerticesMap = graph.collectNeighborIds(EdgeDirection.Either)
+    .collect().map(vertex => (vertex._1.asInstanceOf[Long], vertex._2.toSet))
+    .toMap;
+
   def runAlgorithm = {
+
     logger.info("Starting BronKerbosch Algorithm");
     val potentialClique = MutableSet[Long]()
     val candidates = graph.vertices
       .map(vertex => vertex._1.asInstanceOf[Long]).collect().toSet;
-    candidates.foreach(println)
     val alreadyFound = MutableSet[Long]();
     val cliques = MutableSet[MutableSet[Long]]()
     findCliques(potentialClique, candidates, alreadyFound, cliques);
@@ -37,11 +41,11 @@ class BronKerbosch[VD: ClassTag, ED: ClassTag](sc: SparkContext,
     if (candidates.isEmpty && alreadyFound.isEmpty) {
       cliques.add(potentialClique)
     }
+    val originalCandidates = candidates
     candidates.foreach { candidateVertex =>
       {
-
-        val neighbourVertices = graph.collectNeighborIds(EdgeDirection.Either)
-          .filter(_._1 == candidateVertex).collect().head._2.toSet;
+        val neighbourVertices = neighbourVerticesMap
+          .getOrElse(candidateVertex, Set[Long]()).asInstanceOf[Set[Long]]
 
         findCliques(potentialClique ++ MutableSet(candidateVertex),
           candidates.intersect(neighbourVertices),
