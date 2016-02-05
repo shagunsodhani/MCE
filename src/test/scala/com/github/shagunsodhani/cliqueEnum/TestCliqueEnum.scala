@@ -1,16 +1,19 @@
-package main.scala.com.github.shagunsodhani.example
+package test.scala.com.github.shagunsodhani.cliqueEnum
 
 import org.apache.spark.SparkContext
 import org.apache.spark.graphx.Edge
 import org.apache.spark.graphx.Graph
 import org.apache.spark.rdd.RDD
+import org.junit.Test
 
 import main.scala.com.github.shagunsodhani.cliqueEnum.BronKerbosch
 import main.scala.com.github.shagunsodhani.utils.SparkContextUtils
 
-object Main {
-  def main(args: Array[String]) {
+@Test
+class TestCliqueEnum {
 
+  @Test
+  def testCliqueEnum(): Unit = {
     val sc: SparkContext = SparkContextUtils.getSparkContext
 
     val users: RDD[(Long, (String, String))] =
@@ -25,6 +28,11 @@ object Main {
 
     val bk = new BronKerbosch(sc, graph).runAlgorithm;
 
-    bk.foreach { println }
+    val cliques = Set(Set(2L, 5L), Set(3L, 5L, 7L))
+    
+    assert(cliques == bk)
+    
   }
+
 }
+

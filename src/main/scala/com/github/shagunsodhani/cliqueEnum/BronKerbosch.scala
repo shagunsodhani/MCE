@@ -1,13 +1,14 @@
 package main.scala.com.github.shagunsodhani.cliqueEnum
 
-import org.slf4j.LoggerFactory
-import org.slf4j.Logger
-import org.apache.spark.graphx.Graph
-import scala.reflect.ClassTag
-import org.apache.spark.SparkContext
 import scala.collection.mutable.{ Set => MutableSet }
-import org.apache.spark.graphx.VertexRDD
+import scala.reflect.ClassTag
+
+import org.apache.spark.SparkContext
 import org.apache.spark.graphx.EdgeDirection
+import org.apache.spark.graphx.Graph
+import org.apache.spark.graphx.Graph.graphToGraphOps
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class BronKerbosch[VD: ClassTag, ED: ClassTag](sc: SparkContext,
                                                inputGraph: Graph[VD, ED]) {
